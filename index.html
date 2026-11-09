@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Calculadora do Simples Nacional · 2AK</title>
+<meta name="description" content="Alíquota efetiva, DAS, fator R e projeção de 12 meses do Simples Nacional. Ferramenta da 2AK Contabilidade e Consultoria Preventiva.">
+<meta name="robots" content="noindex">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://pooyzsnqltzoifowbqvc.supabase.co; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="icon" href="logo.png" type="image/png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top"><div class="in top-in">
+  <img class="logo" src="logo.png" width="108" height="65" alt="2AK Contabilidade e Consultoria Preventiva">
+  <div class="ttl">
+    <p class="eyebrow">2AK · Consultoria tributária</p>
+    <h1>Calculadora do Simples Nacional</h1>
+    <p class="lead">Alíquota efetiva e DAS da competência e dos próximos 12 meses, com fator R para os Anexos III e V.</p>
+  </div>
+  <div class="user" id="userBox" hidden><span id="userNome"></span><button type="button" class="btn-link" id="btnSair">Sair</button></div>
+</div></header>
+
+<section class="in auth-wrap" id="auth">
+
+  <div class="auth-card" id="v-carregando"><p class="intro" style="margin:0">Carregando…</p></div>
+
+  <div class="auth-card" id="v-entrar" hidden>
+    <h2 tabindex="-1">Entrar</h2><div class="rule"></div>
+    <p class="intro">Acesse a calculadora com o e-mail e a senha da sua conta.</p>
+    <form id="f-entrar" novalidate>
+      <p class="aviso" id="e-msg" role="alert" hidden></p>
+      <div class="f"><label for="e-email">E-mail</label><div class="inp"><input class="plain" id="e-email" type="email" autocomplete="username" inputmode="email" autocapitalize="off" required ></div></div>
+      <div class="f"><label for="e-senha">Senha</label><div class="inp"><input class="plain" id="e-senha" type="password" autocomplete="current-password" required><button type="button" class="ver" data-alvo="e-senha" aria-label="Mostrar senha">Mostrar</button></div></div>
+      <button type="submit" class="btn dark full" id="e-enviar">Entrar</button>
+      <p style="margin-top:10px"><button type="button" class="lnk" id="e-reenviar" hidden>Reenviar e-mail de confirmação</button></p>
+    </form>
+    <div class="lnk-row">
+      <button type="button" class="lnk" data-ir="recuperar">Esqueci minha senha</button>
+      <span>Primeiro acesso? <button type="button" class="lnk" data-ir="cadastro">Criar conta</button></span>
+    </div>
+  </div>
+
+  <div class="auth-card" id="v-cadastro" hidden>
+    <h2 tabindex="-1">Criar conta</h2><div class="rule"></div>
+    <p class="intro">Cadastre-se para usar a calculadora. Você receberá um e-mail para confirmar o endereço.</p>
+    <form id="f-cadastro" novalidate>
+      <p class="aviso" id="c-msg" role="alert" hidden></p>
+      <div class="f"><label for="c-nome">Nome completo</label><div class="inp"><input class="plain" id="c-nome" type="text" autocomplete="name" maxlength="120" required ></div></div>
+      <div class="f"><label for="c-email">E-mail</label><div class="inp"><input class="plain" id="c-email" type="email" autocomplete="email" inputmode="email" autocapitalize="off" required ></div></div>
+      <div class="f"><label for="c-whats">WhatsApp com DDD</label><div class="inp"><input class="plain" id="c-whats" type="tel" autocomplete="tel" inputmode="tel" maxlength="30" placeholder="(11) 90000-0000" required ></div></div>
+      <div class="f"><label for="c-prof">Você é</label>
+        <select id="c-prof" required>
+          <option value="">Selecione</option>
+          <option value="Contador(a)">Contador(a) ou escritório contábil</option>
+          <option value="Empresário(a)">Empresário(a) ou MEI</option>
+          <option value="Prestador(a) de serviços">Profissional autônomo ou prestador de serviços</option>
+          <option value="Estudante">Estudante</option>
+          <option value="Outro">Outro</option>
+        </select></div>
+      <div class="f"><label for="c-crc">CRC (opcional)</label><div class="inp"><input class="plain" id="c-crc" type="text" autocomplete="off" maxlength="30" ></div></div>
+      <div class="f"><label for="c-senha">Senha (mínimo de 8 caracteres, com letras e números)</label><div class="inp"><input class="plain" id="c-senha" type="password" autocomplete="new-password" required><button type="button" class="ver" data-alvo="c-senha" aria-label="Mostrar senha">Mostrar</button></div></div>
+      <div class="f"><label for="c-senha2">Repita a senha</label><div class="inp"><input class="plain" id="c-senha2" type="password" autocomplete="new-password" required><button type="button" class="ver" data-alvo="c-senha2" aria-label="Mostrar senha">Mostrar</button></div></div>
+      <label class="ck"><input type="checkbox" id="c-aceite"><span>Li e aceito os <a href="termos.html" target="_blank" rel="noopener">Termos de Uso</a> e a <a href="privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a>.</span></label>
+      <button type="submit" class="btn dark full" id="c-enviar">Criar conta</button>
+    </form>
+    <div class="lnk-row"><span>Já tem conta? <button type="button" class="lnk" data-ir="entrar">Entrar</button></span></div>
+  </div>
+
+  <div class="auth-card" id="v-confirmar" hidden>
+    <h2 tabindex="-1">Confirme o seu e-mail</h2><div class="rule"></div>
+    <p class="intro">Enviamos um link de confirmação para <strong id="c-email-enviado"></strong>. Abra o e-mail e clique no link para ativar a conta. Se não encontrar, olhe também o spam.</p>
+    <p class="aviso" id="c-msg2" role="status" hidden></p>
+    <button type="button" class="btn full" id="c-reenviar">Reenviar e-mail</button>
+    <div class="lnk-row"><button type="button" class="lnk" data-ir="entrar">Voltar para entrar</button></div>
+  </div>
+
+  <div class="auth-card" id="v-recuperar" hidden>
+    <h2 tabindex="-1">Recuperar senha</h2><div class="rule"></div>
+    <p class="intro">Informe o e-mail da conta. Enviaremos um link para criar uma nova senha.</p>
+    <form id="f-recuperar" novalidate>
+      <p class="aviso" id="r-msg" role="alert" hidden></p>
+      <div class="f"><label for="r-email">E-mail</label><div class="inp"><input class="plain" id="r-email" type="email" autocomplete="email" inputmode="email" autocapitalize="off" required ></div></div>
+      <button type="submit" class="btn dark full" id="r-enviar">Enviar link</button>
+    </form>
+    <div class="lnk-row"><button type="button" class="lnk" data-ir="entrar">Voltar para entrar</button></div>
+  </div>
+
+  <div class="auth-card" id="v-nova-senha" hidden>
+    <h2 tabindex="-1">Nova senha</h2><div class="rule"></div>
+    <p class="intro">Escolha uma nova senha para a sua conta.</p>
+    <form id="f-nova-senha" novalidate>
+      <p class="aviso" id="n-msg" role="alert" hidden></p>
+      <div class="f"><label for="n-senha">Nova senha (mínimo de 8 caracteres, com letras e números)</label><div class="inp"><input class="plain" id="n-senha" type="password" autocomplete="new-password" required><button type="button" class="ver" data-alvo="n-senha" aria-label="Mostrar senha">Mostrar</button></div></div>
+      <div class="f"><label for="n-senha2">Repita a nova senha</label><div class="inp"><input class="plain" id="n-senha2" type="password" autocomplete="new-password" required><button type="button" class="ver" data-alvo="n-senha2" aria-label="Mostrar senha">Mostrar</button></div></div>
+      <button type="submit" class="btn dark full" id="n-enviar">Salvar senha</button>
+    </form>
+  </div>
+
+  <div class="auth-card" id="v-liberar" hidden>
+    <h2 tabindex="-1">Libere o seu acesso</h2><div class="rule"></div>
+    <p class="intro">Conta criada com <strong id="liberarEmail"></strong>. Para usar a calculadora, faça a compra do acesso vitalício com este mesmo e-mail.</p>
+    <p class="preco" id="liberarPreco" hidden></p>
+    <ul class="lista">
+      <li>Alíquota efetiva e DAS da competência, dos Anexos I a V.</li>
+      <li>Fator R com comparação entre Anexo III e Anexo V.</li>
+      <li>Projeção de 12 meses com alertas de sublimite e limite.</li>
+      <li>Pagamento único, sem mensalidade.</li>
+    </ul>
+    <p class="aviso" id="liberarMsg" role="status" hidden></p>
+    <a class="btn dark full" id="linkCompra" href="#" target="_blank" rel="noopener">Comprar acesso</a>
+    <button type="button" class="btn full" id="btnJaComprei" style="margin-top:10px">Já comprei, liberar meu acesso</button>
+    <div class="lnk-row"><button type="button" class="lnk" id="btnSairLiberar">Sair da conta</button></div>
+  </div>
+
+</section>
+
+<div id="tela-app" hidden>
+<main class="in main">
+<div class="grid">
+
+  <form class="panel" id="form" autocomplete="off">
+    <div class="ph"><h2>Dados da empresa</h2><span class="tag" id="exTag">Exemplo</span></div>
+    <div class="rule"></div>
+
+    <div class="f">
+      <label for="anexo">Atividade</label>
+      <select id="anexo">
+        <option value="R">Serviços com fator R (Anexo III ou V)</option>
+        <option value="III">Anexo III, serviços</option>
+        <option value="V">Anexo V, serviços intelectuais</option>
+        <option value="I">Anexo I, comércio</option>
+        <option value="II">Anexo II, indústria</option>
+        <option value="IV">Anexo IV, construção, vigilância e limpeza</option>
+      </select>
+      <p class="hint" id="anexoHint"></p>
+    </div>
+
+    <div class="f">
+      <span class="lb" id="compLb">Competência</span>
+      <div class="row2" role="group" aria-labelledby="compLb">
+        <select id="compM" aria-label="Mês da competência"></select>
+        <select id="compY" aria-label="Ano da competência"></select>
+      </div>
+    </div>
+
+    <div class="f">
+      <label for="fat">Faturamento do mês</label>
+      <div class="inp"><span>R$</span><input id="fat" class="money" inputmode="decimal" value="85.000,00"></div>
+    </div>
+
+    <div class="f">
+      <label for="rbt12">RBT12, receita dos 12 meses anteriores</label>
+      <div class="inp" id="rbtBox"><span>R$</span><input id="rbt12" class="money" inputmode="decimal" value="960.000,00"></div>
+      <p class="hint" id="rbtHint">Soma dos 12 meses anteriores à competência, sem incluir o mês apurado.</p>
+    </div>
+    <details class="dt" id="mesDet">
+      <summary>Detalhar os 12 meses anteriores</summary>
+      <div class="mgrid" id="mgrid"></div>
+      <div class="btns"><button type="button" class="btn" id="mesClear">Limpar meses</button></div>
+    </details>
+
+    <div class="f" id="folhaWrap">
+      <label for="folha">Folha dos 12 meses anteriores</label>
+      <div class="inp" id="folhaBox"><span>R$</span><input id="folha" class="money" inputmode="decimal" value="240.000,00"></div>
+      <p class="hint">Salários, pró-labore, 13º, férias, INSS patronal e FGTS. É o numerador do fator R.</p>
+    </div>
+
+    <label class="ck"><input type="checkbox" id="nova"><span>Empresa com menos de 12 meses de atividade</span></label>
+    <div id="novaWrap" hidden>
+      <div class="row2">
+        <div class="f"><label for="meses">Meses de atividade</label><div class="inp"><input id="meses" class="plain" type="number" min="1" max="11" step="1" value="6" inputmode="numeric"></div></div>
+        <div class="f"><label for="acum">Receita acumulada</label><div class="inp"><span>R$</span><input id="acum" class="money" inputmode="decimal" value=""></div></div>
+      </div>
+      <div class="f" id="folhaAcumWrap"><label for="folhaAcum">Folha acumulada</label><div class="inp"><span>R$</span><input id="folhaAcum" class="money" inputmode="decimal" value=""></div></div>
+      <p class="hint" style="margin:-6px 0 14px">Os valores dos 12 meses são estimados pela média mensal, multiplicada por 12 (LC 123/2006, art. 18, § 2º). No primeiro mês de atividade, use a receita do próprio mês vezes 12.</p>
+    </div>
+
+    <h3 class="sub-h">Projeção, crescimento ao mês</h3>
+    <div class="row2">
+      <div class="f"><label for="g">Faturamento</label><div class="inp"><input id="g" class="plain" inputmode="decimal" value="2,0"><span class="suf">%</span></div></div>
+      <div class="f" id="gfWrap"><label for="gf">Folha</label><div class="inp"><input id="gf" class="plain" inputmode="decimal" value="0,0"><span class="suf">%</span></div></div>
+    </div>
+    <div class="f">
+      <label for="sub">Sublimite estadual de ICMS e ISS</label>
+      <select id="sub">
+        <option value="3600000">R$ 3,6 milhões (padrão)</option>
+        <option value="1800000">R$ 1,8 milhão (AC, AP e RR)</option>
+      </select>
+    </div>
+
+    <div class="btns">
+      <button type="button" class="btn dark" id="btnEx">Restaurar exemplo</button>
+      <button type="button" class="btn" id="btnClear">Limpar</button>
+    </div>
+  </form>
+
+  <div class="res">
+    <p class="calc-estado" id="calcEstado" role="status" aria-live="polite"></p>
+    <div id="empty" class="empty" hidden>
+      <h3>Informe o faturamento e o RBT12</h3>
+      <p>Com os dois valores preenchidos, a calculadora mostra a alíquota efetiva, o DAS e a projeção dos próximos 12 meses.</p>
+    </div>
+    <div id="resBlock" class="res">
+      <div>
+        <section class="hero" aria-live="polite">
+          <div>
+            <div class="k">Alíquota efetiva</div>
+            <div class="big" id="oAe">0,0000%</div>
+            <div class="pills" id="oPills"></div>
+          </div>
+          <div>
+            <div class="k">DAS estimado</div>
+            <div class="big w" id="oDas">R$ 0,00</div>
+            <div class="sm" id="oVenc"></div>
+          </div>
+        </section>
+        <dl class="stats" id="oStats"></dl>
+      </div>
+      <ul class="alerts" id="oAlerts"></ul>
+      <div class="two">
+        <section class="card">
+          <h2>Memória de cálculo</h2><div class="rule"></div>
+          <ol class="steps" id="oSteps"></ol>
+          <div class="copyrow"><button type="button" class="btn dark" id="btnCopy">Copiar memória de cálculo</button><span class="msg" id="copyMsg" role="status"></span></div>
+          <textarea id="copyBox" readonly hidden aria-label="Memória de cálculo para copiar"></textarea>
+        </section>
+        <section class="card">
+          <h2 id="oFaixasT">Faixas</h2><div class="rule"></div>
+          <div class="tw"><table class="tbl wrap" id="oFaixas"></table></div>
+          <p class="note" id="oFaixasN"></p>
+        </section>
+      </div>
+      <section class="card" id="rCard">
+        <h2>Fator R</h2><div class="rule"></div>
+        <div id="rBody"></div>
+      </section>
+    </div>
+  </div>
+</div>
+</main>
+
+<section class="in proj" id="projSec">
+  <div class="sech">
+    <h2>Projeção dos próximos 12 meses</h2><div class="rule"></div>
+    <p id="projAssume"></p>
+  </div>
+  <div id="projBody">
+    <div class="kpis" id="pKpis"></div>
+    <ul class="alerts" id="pAlerts" style="margin-bottom:18px"></ul>
+    <div class="charts">
+      <section class="card"><h2>Alíquota efetiva</h2><div class="rule"></div><div class="leg" id="leg1"></div><div class="chart" id="ch1"></div></section>
+      <section class="card"><h2>RBT12 e limites</h2><div class="rule"></div><div class="leg" id="leg2"></div><div class="chart" id="ch2"></div></section>
+    </div>
+    <section class="card">
+      <h2>Mês a mês</h2><div class="rule"></div>
+      <div class="tw"><table class="tbl" id="pTable"></table></div>
+      <p class="note" id="pNote"></p>
+    </section>
+  </div>
+</section>
+</div>
+
+<footer>
+  <div class="in fin">
+    <div>
+      <div class="tagl">Planejar hoje. Proteger sempre.</div>
+      <div class="nm">2AK Contabilidade e Consultoria Preventiva</div>
+      <div class="c">(11) 94714-1458 · contato@2akconsult.com.br</div>
+      <div class="links"><a href="termos.html">Termos de Uso</a><a href="privacidade.html">Política de Privacidade</a></div>
+    </div>
+    <div>
+      <p class="s">Estimativa para planejamento. A apuração oficial é feita no PGDAS-D, e eventual divergência indica erro de classificação, de RBT12 ou de fator R. Tabelas dos Anexos I a V vigentes em 2026.</p>
+      <details>
+        <summary>Base legal</summary>
+        <ul>
+          <li>LC 123/2006, art. 18, §§ 1º a 1º-B e Anexos I a V (redação da LC 155/2016): alíquota nominal e parcela a deduzir por faixa de RBT12; alíquota efetiva = (RBT12 × alíquota nominal − parcela a deduzir) ÷ RBT12.</li>
+          <li>LC 123/2006, art. 18, §§ 5º-I a 5º-M: serviços do Anexo V e fator r (folha de salários ÷ RBT12), com migração ao Anexo III quando r ≥ 28%.</li>
+          <li>LC 123/2006, art. 18, § 5º-C: Anexo IV, com CPP patronal recolhida fora do DAS.</li>
+          <li>LC 123/2006, art. 18, § 2º: proporcionalização no início de atividade.</li>
+          <li>LC 123/2006, art. 3º, II: limite de R$ 4,8 milhões de receita bruta no ano-calendário. Arts. 19 e 20: sublimites estaduais de ICMS e ISS.</li>
+          <li>Resolução CGSN 140/2018: apuração e vencimento do DAS (dia 20 do mês seguinte, prorrogado para o dia útil seguinte).</li>
+          <li>Competências a partir de 01/2027: confirme tabelas e regras vigentes (Resolução CGSN 190/2026, adequação do Simples à reforma tributária do consumo).</li>
+        </ul>
+      </details>
+    </div>
+  </div>
+</footer>
+
+<script src="config.js"></script>
+<script src="vendor/supabase.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

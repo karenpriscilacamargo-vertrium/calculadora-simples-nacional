@@ -1,0 +1,7 @@
+Copyright (c) 2026 2AK Contabilidade e Consultoria Preventiva. Todos os direitos reservados.
+
+Este código, os textos, a marca e o logotipo são de uso exclusivo da 2AK. Não é concedida licença para
+copiar, modificar, distribuir ou revender, no todo ou em parte, sem autorização por escrito.
+
+Exceção: a pasta vendor/ contém a biblioteca supabase-js, sob licença MIT (ver vendor/supabase-js.LICENSE),
+e a pasta fonts/ contém as fontes Cinzel e Montserrat, sob a SIL Open Font License 1.1.
